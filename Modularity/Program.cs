@@ -7,6 +7,8 @@ using InputOutputLibrary;
 using CalculatorLibrary;
 using Microsoft.Practices.Unity;
 using CalculatorCommandParsingLibrary;
+using Microsoft.Practices.Unity.Configuration;
+using System.Configuration;
 
 namespace Modularity
 {
@@ -15,14 +17,11 @@ namespace Modularity
         static void Main(string[] args)
         {
             UnityContainer container = new UnityContainer();
-            
-            
-            container.RegisterType<ICalculator, Calculator>();
-            container.RegisterType<IInputService, ConsoleInputService>();
-            container.RegisterType<IOutputService, ConsoleOutputService>();
-            container.RegisterType<IInputParserService, InputParserService>();
 
-            container.RegisterType<ICalculatorReplLoop, CalculatorReplLoop>();
+            UnityConfigurationSection configSection = (UnityConfigurationSection)ConfigurationManager.GetSection("unity");
+            configSection.Containers.Default.Configure(container);
+            //configSection.Configure(container, "unity");
+           
 
             ICalculatorReplLoop loop = container.Resolve<ICalculatorReplLoop>();
             
