@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using InputOutputLibrary;
+using CalculatorLibrary;
+using Microsoft.Practices.Unity;
+using CalculatorCommandParsingLibrary;
 
 namespace Modularity
 {
@@ -11,10 +14,20 @@ namespace Modularity
     {
         static void Main(string[] args)
         {
-            CalculatorReplLoop loop = new CalculatorReplLoop();
-            loop.OutputService = new MsgBoxOutputService();
-            //loop.OutputService = new ConsoleOutputService();
+            UnityContainer container = new UnityContainer();
+            
+            
+            container.RegisterType<ICalculator, Calculator>();
+            container.RegisterType<IInputService, ConsoleInputService>();
+            container.RegisterType<IOutputService, ConsoleOutputService>();
+            container.RegisterType<IInputParserService, InputParserService>();
+
+            container.RegisterType<ICalculatorReplLoop, CalculatorReplLoop>();
+
+            ICalculatorReplLoop loop = container.Resolve<ICalculatorReplLoop>();
+            
             loop.Run();
+
         }
 
     }
